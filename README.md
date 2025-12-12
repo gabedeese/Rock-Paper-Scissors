@@ -1,4 +1,4 @@
-<hi style="text-align: center;">Simple Javascript game of Rock Paper Scissors to be played in the console</hi>
+<h1 style="text-align: center;">Simple Javascript game of Rock Paper Scissors to be played in the console</h1>
 
 <h3>This is a project for JavaScript foundations in The Odin Project</h3>
 
