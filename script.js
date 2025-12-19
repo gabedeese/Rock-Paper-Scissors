@@ -60,38 +60,118 @@ function playRound(userChoice, computerChoice) {
   }
 }
 
+// Function to modify the DOM with post round stats and next round button
+function postRound(message) {
+
+  // Disable all the other buttons
+  rock.disabled = true;
+  paper.disabled = true;
+  scissors.disabled = true;
+
+  const div = document.createElement("div");
+  div.textContent = `${message} You: ${userScore} | Computer: ${computerScore}`;
+  div.setAttribute("style", "margin-top: 16px;");
+ 
+  const playAgainButton = document.createElement("button");
+  playAgainButton.textContent = "Next Round";
+  playAgainButton.setAttribute("style", "margin-left: 16px;");
+
+  div.appendChild(playAgainButton);
+  document.body.appendChild(div);
+
+  playAgainButton.addEventListener("click", () => {
+    div.remove();
+    rock.disabled = false;
+    paper.disabled = false;
+    scissors.disabled = false;
+  });
+}
+
+// Largely the same as postRound() but adds play again to the button and
+// resets all stats after the play again button is clicked (reloads the page)
+function postGame(message) {
+
+  // Disable all the other buttons
+  rock.disabled = true;
+  paper.disabled = true;
+  scissors.disabled = true;
+
+  const div = document.createElement("div");
+  div.textContent = `${message} You: ${userScore} | Computer: ${computerScore}`;
+  div.setAttribute("style", "margin-top: 16px;");
+
+  const playAgainButton = document.createElement("button");
+  playAgainButton.textContent = "Play Again!";
+  playAgainButton.setAttribute("style", "margin-left: 16px;");
+
+  div.appendChild(playAgainButton);
+  document.body.appendChild(div);
+
+  playAgainButton.addEventListener("click", () => {
+    location.reload();
+  });
+}
+
+function displayWinner(userChoice) {
+  roundCount++;
+  const computerChoice = getComputerChoice();
+  const winner = playRound(userChoice, computerChoice);
+
+  if (winner === "User") {
+    userScore++;
+
+    if (roundCount < 5) {
+      postRound("You win this round! The score is");
+    }
+    else {
+      if (userScore > computerScore) {
+        postGame("You won the game! The final score is");
+      }
+      else if (userScore < computerScore) {
+        postGame("You lost the game... The final score is");
+      }
+      else {
+        postGame("You tied the game! The final score is");
+      }
+    }
+  }
+
+  else {
+    computerScore++;
+
+    if (roundCount < 5) {
+      postRound("You lost this round! The score is");
+    }
+    else {
+      if (userScore > computerScore) {
+        postGame("You won the game! The final score is");
+      }
+      else if (userScore < computerScore) {
+        postGame("You lost the game... The final score is");
+      }
+      else {
+        postGame("You tied the game! The final score is");
+      }
+    }
+  }
+}
+
 // Declare the variables to hold the scores
 let userScore = 0;
 let computerScore = 0;
+let roundCount = 0;
 
-// Now we start a loop to play 5 rounds and then calculate the winner at the end
-for (let i = 0; i < 5; i++) {
-  // First get the user's input then get a random computer choice
-  let userChoice = getUserChoice();
-  let computerChoice = getComputerChoice();
+// Declare each button to be used later in eventListener
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
 
-  // Play the round and assign the winner to a variable
-  let winner = playRound(userChoice, computerChoice);
-
-  // Adjust the score of the winner
-  if (winner === "User") {
-    userScore++;
-  }
-  else if (winner === "Computer") {
-    computerScore++;
-  }
-
-  // Update the player on the scores for better readability
-  console.log("You: " + userScore + "\nComputer: " + computerScore);
-}
-
-// After the 5 rounds are up, see who is the winner for the game
-if (userScore > computerScore) {
-  console.log("You win the game!!!")
-}
-else if (userScore < computerScore) {
-  console.log("Computer wins the game!!!")
-}
-else {
-  console.log("Wow! It's a tie!");
-}
+rock.addEventListener("click", () => {
+  displayWinner("rock");
+});
+paper.addEventListener("click", () => {
+  displayWinner("paper");
+});
+scissors.addEventListener("click", () => {
+  displayWinner("scissors");
+});
